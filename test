@@ -1,1 +1,3 @@
-{"success":true,"lowest_price":"$1.16","volume":"50","median_price":"$1.15"}
+import sys
+print(sys.argv[0])
+print(sys.argv[1])
