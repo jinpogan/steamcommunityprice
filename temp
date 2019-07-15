@@ -1,0 +1,34 @@
+
+try:
+    try:
+        mode = sys.argv[2]
+    except:
+        mode="nondev"
+    appid = sys.argv[1]
+    while(1):
+        pricejson = os.popen('curl https://store.steampowered.com/api/appdetails?appids='+appid).read()
+        pricejson = ast.literal_eval(pricejson)
+        pricejson[lowest_price]
+        print("Price is",pricejson[lowest_price])
+        startprice = price
+        if startprice != price:
+            if startprice > price:
+                import tturtle
+            else:
+                import btturtle
+        if mode == "-dev":
+            time.sleep(2)
+        else:
+            time.sleep(120)
+except:
+    print('''
+Usage:
+================================================================================
+python3 main.py [options] <appid>
+    -dev    enable development mode(check the price more frequently)
+================================================================================
+Appid is the steam app id. For example PLAYERUNKNOWN'S BATTLEGROUNDS's steam url
+is https://store.steampowered.com/app/578080. So PLAYERUNKNOWN'S BATTLEGROUNDS's
+appid is 578080.
+================================================================================
+    ''')
