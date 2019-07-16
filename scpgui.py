@@ -1,34 +1,64 @@
-def rstart():
-    thread = threading.Thread(target=start, args=())
-    thread.daemon = True                            # Daemonize thread
-    thread.start()
+
+def pickaduiofile():
+    filepath = filedialog.askopenfilename(initialdir = "~",title = "Select file",filetypes = (("mp3 files","*.mp3"),("wav files","*.wav"),("all files","*.*")))
+    filename, file_extension = os.path.splitext(filepath)
+    cp(filepath,"./alarm"+file_extension)
+    if file_extension == ".mp3":
+        sound = AudioSegment.from_mp3("./alarm.mp3")
+        sound.export("./alarm.wav", format="wav")
+
+    '''
+
+    sound = AudioSegment.from_mp3("/path/to/file.mp3")
+    sound.export("/output/path/file.wav", format="wav")
+    '''
+def alarmt(text,balarm):
+    if balarm != True:
+        wave_obj = sa.WaveObject.from_wave_file("./alarm.wav")
+        play_obj = wave_obj.play()
+        #playsound('''./alarm.mp3''')
+    turtle.setup(width = 1.0, height = 1.0)
+    turtle.colormode(255)
+    turtle.speed(0)
+    turtle.color(rand(0,255), rand(0,255), rand(0,255))
+    turtle.write(text, align="middle",font=("Arial", 70, "normal"))
+    if balarm == True:
+        for x in range(60):
+            turtle.bgcolor(rand(0,255), rand(0,255), rand(0,255))
+            print ('\a')
+    else:
+        for x in range(60):
+            turtle.bgcolor(rand(0,255), rand(0,255), rand(0,255))
+            time.sleep(0.5)
 def start():
-
-
-
-    stop = False
     print(gameappid.get())
     print(itemname.get())
     print(timebc.get())
-
-    if stop == True:
-        pass
-    else:
+    price=getprice(gameappid.get(),itemname.get())
+    startprice = price
+    while(1):
         price=getprice(gameappid.get(),itemname.get())
-        startprice = price
-        while(1):
+        print(price)
+        if startprice != price:
+            if startprice > price:
 
+                try:
+                    alarmt('''\\!PRICE DECREASED!/''',False)
+                except:
+                    try:
+                        alarmt('''\\!PRICE DECREASED!/''',False)
+                    except:
+                        alarmt('''\\!PRICE DECREASED!/''',True)
+            else:
+                try:
 
-            if stop == True:
-                break
-            price=getprice(gameappid.get(),itemname.get())
-            print(price)
-            if startprice != price:
-                if startprice > price:
-                    print("sdafasFDasfda")
-                else:
-                    print("sdaf")
-            tk.after(int(timebc.get())*1000)
+                    alarmt('''\\!PRICE INDECREASED!/''',False)
+                except:
+                    try:
+                        alarmt('''\\!PRICE INDECREASED!/''',False)
+                    except:
+                        alarmt('''\\!PRICE INDECREASED!/''',True)
+        time.sleep(int(timebc.get()))
 
 def getprice(appid,itemname):
     pricejson = os.popen('''curl "https://steamcommunity.com/market/priceoverview/?appid='''+appid+'''&currency=1&market_hash_name=''' + itemname +'''"''').read()
@@ -36,35 +66,38 @@ def getprice(appid,itemname):
     pricejson = json.loads(pricejson)
     priceincents = pricejson["lowest_price"].replace("$","").replace(".","").replace(",","")
     return priceincents
-def stopr():
-    global stop
-    if stop == True:
-        tk.destroy()
-        quit()
-    stop=True
-import threading
 import os
+import time
 import json
+from random import randint as rand
 import tkinter
-stop=True
+import turtle
+from pydub import AudioSegment
+import simpleaudio as sa
+from shutil import copy2 as cp
+from tkinter import filedialog
+
 #from tkinter.constants import *
 tk = tkinter.Tk()
 tk.title("Steam Community Price Checker")
 label = tkinter.Label(text="Steam Community Price Checker")
 label.place(x=0,y=0)
-tk.geometry("480x190")
+tk.geometry("480x320")
 e5=tkinter.Label(tk,text='''Steam game's appid:''').place(x=0,y=30)
 e6=tkinter.Label(tk,text='''Item's full name:''').place(x=0,y=70)
 e7=tkinter.Label(tk,text='''Seconds between each check:''').place(x=0,y=110)
+e7=tkinter.Label(tk,text='''Alarm sound file (mp3/wav):''').place(x=0,y=150)
+
 gameappid = tkinter.StringVar()
 itemname = tkinter.StringVar()
 timebc = tkinter.StringVar()
 e1 = tkinter.Entry(tk,textvariable=gameappid)
 e2 = tkinter.Entry(tk,textvariable=itemname)   #用*号代替用户输入的内容
 e3 = tkinter.Entry(tk,textvariable=timebc)
+e4=tkinter.Button(tk,text='Chose',command=pickaduiofile).place(x=220,y=150)
 e1.place(x=220,y=30)
 e2.place(x=220,y=70)
 e3.place(x=220,y=110)
-b2=tkinter.Button(tk,text='OK',command=rstart).place(x=20,y=150)
-b3=tkinter.Button(tk,text='Cancel',command=stopr).place(x=80,y=150)
+b2=tkinter.Button(tk,text='OK',command=start).place(x=20,y=190)
+b3=tkinter.Button(tk,text='Quit',command=tk.destroy).place(x=80,y=190)
 tk.mainloop()
