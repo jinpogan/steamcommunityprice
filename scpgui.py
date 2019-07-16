@@ -7,11 +7,6 @@ def pickaduiofile():
         sound = AudioSegment.from_mp3("./alarm.mp3")
         sound.export("./alarm.wav", format="wav")
 
-    '''
-
-    sound = AudioSegment.from_mp3("/path/to/file.mp3")
-    sound.export("/output/path/file.wav", format="wav")
-    '''
 def alarmt(text,balarm):
     if balarm != True:
         wave_obj = sa.WaveObject.from_wave_file("./alarm.wav")
